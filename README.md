@@ -16,6 +16,7 @@ Ideal features:
 	- Dim/brighten colors
 - Updates within seconds of changing songs
 
+### LED Interface
 
 Server will be run on an RPI, probably gonna interface with the LEDs via gpio (Or ideally we have some wireless way of connecting to the lights from the rpi). GPIO isn't my ideal solution because thats kinda icky, but it might be the only option, seeing as that's what everyone on the internet seems to use.
 
@@ -23,3 +24,21 @@ Useful links:
 https://dordnung.de/raspberrypi-ledstrip/
 
 Seems to be basically 3 mosfets and a power adapter.
+
+### Song Analysis
+Spotify API gives us access to some audio features of a song:
+- danceability
+- energy
+- loudness
+- acousticness
+- speechiness
+- instrumentalness
+- liveness
+- valence
+- tempo
+
+Current plan is to use the energy and valence of the song to associate it with an emotion, and then apply this to a color gradient (ex. happy to sad maps from blue to red). This will give us a default color for every song. Another possibility is to change the brightness of the lights based on the loudness of the song.
+
+### User Overrides
+The user will be able to override the color for genres (each album is given a set of tags, we can make a database of the genres a user has listened to). User will also be able to modify the default color gradient, tweak settings for the song analysis, and merge genre tags (i.e. merge 'metalcore' and 'thrash-metal', and make songs with those tags use the same colors.)
+
