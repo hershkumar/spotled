@@ -39,6 +39,9 @@ Spotify API gives us access to some audio features of a song:
 
 Current plan is to use the energy and valence of the song to associate it with an emotion, and then apply this to a color gradient (ex. happy to sad maps from blue to red). This will give us a default color for every song. Another possibility is to change the brightness of the lights based on the loudness of the song.
 
+#### Neural Net
+The neural net will map the numerics given by spotify (the audio features above) and will map the numbers to a single value. The current plan is to make a playlist of a hundred-ish songs and manually rate the intensity of each song, and use that as a base set for training data (https://open.spotify.com/playlist/5rkJQBt5QPTcV4Y1bAQb5R?si=FIG982vkS-2P4Oj6VDzWng).
+
 ### User Overrides
 The user will be able to override the color for genres (each album is given a set of tags, we can make a database of the genres a user has listened to). User will also be able to modify the default color gradient, tweak settings for the song analysis, and merge genre tags (i.e. merge 'metalcore' and 'thrash-metal', and make songs with those tags use the same colors.)
 
