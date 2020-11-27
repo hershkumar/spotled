@@ -45,9 +45,9 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID, client_secre
 printer = pprint.PrettyPrinter()
 # poll to get the track that is currently playing
 curr_track = track(sp.current_user_playing_track())
+if (not curr_track.track_obj == None):
+	# access the stored data to get the necessary info
+	print(curr_track.get_track_name() + " by " + curr_track.get_track_artist() + " on the album " + curr_track.get_track_album_name() + ", song id: " + str(curr_track.get_track_id()))
 
-# access the stored data to get the necessary info
-print(curr_track.get_track_name() + " by " + curr_track.get_track_artist() + " on the album " + curr_track.get_track_album_name() + ", song id: " + str(curr_track.get_track_id()))
-
-# Now we want to access the numerical data for a track
-features = sp.audio_features(curr_track.get_track_id())[0]
+	# Now we want to access the numerical data for a track
+	features = sp.audio_features(curr_track.get_track_id())[0]
