@@ -1,0 +1,25 @@
+<html>
+    <head>
+    	<meta http-equiv="refresh" content="15">
+        <title>Spotled</title>
+    </head>
+    <body>
+        <h1>Hello, {{ user.username }}!</h1>
+        <p>You are currently listening to {{ user.curr_track_name }}, by {{ user.curr_track_artist }} on the album {{ user.curr_track_album }}!</p>
+        <p>The song has a energy rating of {{ song.energy }}</p>
+        <p>The song has a valence rating of {{ song.valence }}</p>
+        <p>The song has a loudness rating of {{ song.loudness }}</p>
+        <p>The song has a tempo of {{ song.tempo }}</p>
+        <style type="text/css">
+        	canvas{
+        		background-color: {{ song.color }}
+        	}
+
+        </style>
+        <canvas>
+        	
+        </canvas>
+
+        <p>Updated at {{ time }}</p>
+    </body>
+</html>
