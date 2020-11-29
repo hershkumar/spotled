@@ -48,9 +48,10 @@ def get_color(features):
 	energy = features.get('energy')
 	valence = features.get('valence')
 	# do some math here to get a single int between 0 and 100
-	final = round((energy * 100 + valence * 100)/2)
+	final = round((energy * 100 + (1 - valence) * 50)/2)
+	final = round(energy * 100)
 	# make a color gradient
-	colors = list(Color("blue").range_to(Color("red"),100))
+	colors = list(Color("blue").range_to(Color("red"), 101))
 	return colors[final]
 
 def insert_track_into_db(db, curr_track, features):
@@ -102,8 +103,9 @@ def index():
 				'tempo': check[0][7],
 				}
 			song = {'energy' : features.get('energy'), 'valence' : features.get('valence'),'loudness' : features.get('loudness'), 'tempo' : features.get('tempo'), 'color': get_color(features)}
-			
-		return render_template('index.html', user=user, song=song, time=timestamp)
+		# how often the webpage should refresh itself, polling rate
+		ref_rate = 30
+		return render_template('index.html', user=user, song=song, time=timestamp, refresh=ref_rate)
 
 
 @app.route('/settings')
