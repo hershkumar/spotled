@@ -10,10 +10,7 @@ from time import sleep
 class LedMode(enum.Enum):
     #function of brightness over time as a lambda
     STATIC = lambda brightness: brightness,
-    BEATHING = lambda brightness: (),
-    RAINBOW = 2,
-    BLINKING = 3,
-    MORSE = 4
+    BEATHING = lambda brightness: ()
 
 class LedDriver(Thread):
 
@@ -30,7 +27,6 @@ class LedDriver(Thread):
         self.R_PWM = RPi.GPIO.PWM(R_CHANNEL, 100)
         self.G_PWM = RPi.GPIO.PWM(R_CHANNEL, 100)
         self.B_PWM = RPi.GPIO.PWM(R_CHANNEL, 100)
-        self.set_LED_brightness(self.R_PWM, 40)
 
     def set_LED_brightness(self, pwm_object, val):
         if val < 0:
