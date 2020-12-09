@@ -175,7 +175,7 @@ def index():
 					'loudness': check[0][6],
 					'tempo': check[0][7],
 					}
-				song = {'energy' : features.get('energy'), 'valence' : features.get('valence'),'loudness' : features.get('loudness'), 'tempo' : features.get('tempo'), 'color': get_color(features)}
+				song = {'energy' : features.get('energy'), 'valence' : features.get('valence'),'loudness' : features.get('loudness'), 'tempo' : features.get('tempo'), 'color': '#%02x%02x%02x' % get_color(features)}
 				timestamp = datetime.datetime.now()
 				# set the color of the leds
 				col = get_color_rgb(features)
