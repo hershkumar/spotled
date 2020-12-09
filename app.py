@@ -103,7 +103,7 @@ def get_color(features):
 	colors = [(255,0,128),(255,0,255),(128,0,255),(0,0,255),(0,128,255),(0,255,255),(0,255,128),(0,255,0),(128,255,0),(255,255,0),(255,0,0),(255,0,0)]
 	n = len(colors)
 	b = 1.4
-	final = n * math.tan(b * energy)/math.tan(b)
+	final = (n - 1) * math.tan(b * energy)/math.tan(b)
 	final = round(final)
 	print(final)
 	return colors[final]
