@@ -102,9 +102,10 @@ def get_color(features):
 	# make a color gradient
 	colors = [(255,0,128),(255,0,255),(128,0,255),(0,0,255),(0,128,255),(0,255,255),(0,255,128),(0,255,0),(128,255,0),(255,255,0),(255,0,0),(255,0,0)]
 	n = len(colors)
-	final = math.tan(1.4 * energy)/math.tan(1.4)
+	b = 1.4
+	final = n * math.tan(b * energy)/math.tan(b)
 	final = round(final)
-	
+	print(final)
 	return colors[final]
 
 def get_color_rgb(features):
