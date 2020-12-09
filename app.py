@@ -129,11 +129,14 @@ def clear_db(db):
 #create the flask object
 app = Flask(__name__)
 
+
+# access the Led's
+driver = LedDriver(R_PIN, G_PIN, B_PIN)
+
 # default routing
 @app.route('/')
 def index():
-	# access the Led's
-	driver = LedDriver(R_PIN, G_PIN, B_PIN)
+	
 	# if the system is on
 	if (ON):
 		# do the authentication voodoo
