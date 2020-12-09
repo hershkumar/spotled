@@ -6,7 +6,18 @@ from flask_session import Session
 from colour import Color
 import sqlite3
 import datetime
-import json
+
+
+try:
+	import RPi.GPIO
+except (RuntimeError, ModuleNotFoundError):
+	import fake_rpigpio.utils
+	fake_rpigpio.utils.install()
+import enum
+import math
+from threading import Thread
+from time import sleep
+
 
 # load the client keys from a file
 secrets = open("keys.txt", "r")
@@ -14,10 +25,46 @@ CLIENT_ID = secrets.readline().strip()
 CLIENT_SECRET = secrets.readline().strip()
 REDIRECT_URI = secrets.readline().strip()
 
+
+# Set GPIO pin constants for my setup
+R_PIN = 17
+G_PIN = 22
+B_PIN = 24
+
+
 # What we want to access
 scope = "user-read-currently-playing"
+class LedMode(enum.Enum):
+	#function of brightness over time as a lambda
+	STATIC = lambda brightness: brightness,
+	BEATHING = lambda brightness: ()
 
+class LedDriver(Thread):
+	UPDATE_RATE = 1 / 30 #hz
 
+	def __init__(self, R_CHANNEL, G_CHANNEL, B_CHANNEL):
+		self.current_mode = LedMode.STATIC
+
+		RPi.GPIO.setmode(RPi.GPIO.BCM)
+		RPi.GPIO.setup(R_CHANNEL, RPi.GPIO.OUT)
+		RPi.GPIO.setup(G_CHANNEL, RPi.GPIO.OUT)
+		RPi.GPIO.setup(B_CHANNEL, RPi.GPIO.OUT)
+
+		self.R_PWM = RPi.GPIO.PWM(R_CHANNEL, 100)
+		self.G_PWM = RPi.GPIO.PWM(G_CHANNEL, 100)
+		self.B_PWM = RPi.GPIO.PWM(B_CHANNEL, 100)
+
+		self.R_PWM.start(0)
+		self.G_PWM.start(0)
+		self.B_PWM.start(0)
+    
+	def set_rgb_power(self, rgb_vals):
+		self.R_PWM.ChangeDutyCycle(rgb_vals[0]/255. * 100)
+		self.G_PWM.ChangeDutyCycle(rgb_vals[1]/255. * 100)
+		self.B_PWM.ChangeDutyCycle(rgb_vals[2]/255. * 100) 
+
+	def change_mode(self, new_mode):
+		self.current_mode = new_mode
 
 ON = True
 # how often the webpage should refresh itself, polling rate
@@ -59,6 +106,11 @@ def get_color(features):
 	colors = list(Color("blue").range_to(Color("red"), 101))
 	return colors[final]
 
+def get_color_rgb(features):
+	col = get_color(features)
+	return (col.red * 255, col.blue * 255, col.green * 255)
+	
+
 def insert_track_into_db(db, curr_track, features):
 	db.execute("INSERT INTO TRACKS (ID, NAME, ARTIST, ALBUM, ENERGY, VALENCE, LOUDNESS, TEMPO)\
 		VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (curr_track.get_track_id(), curr_track.get_track_name(), curr_track.get_track_artist(), curr_track.get_track_album_name(), float(features.get('energy')), float(features.get('valence')), float(features.get('loudness')), float(features.get('tempo'))))
@@ -80,6 +132,8 @@ app = Flask(__name__)
 # default routing
 @app.route('/')
 def index():
+	# access the Led's
+	driver = LedDriver(R_PIN, G_PIN, B_PIN)
 	# if the system is on
 	if (ON):
 		# do the authentication voodoo
@@ -120,6 +174,9 @@ def index():
 					}
 				song = {'energy' : features.get('energy'), 'valence' : features.get('valence'),'loudness' : features.get('loudness'), 'tempo' : features.get('tempo'), 'color': get_color(features)}
 				timestamp = datetime.datetime.now()
+				# set the color of the leds
+				col = get_color_rgb(features)
+				driver.set_rgb_power(col[0],col[1],col[2])
 				return render_template('index.html', user=user, song=song, time=timestamp, refresh=ref_rate)
 	else:
 		return "The system is currently off."
