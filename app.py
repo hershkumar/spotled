@@ -105,7 +105,6 @@ def get_color(features):
 	b = 1.4
 	final = (n - 1) * math.tan(b * energy)/math.tan(b)
 	final = round(final)
-	print(final)
 	return colors[final]
 
 def get_color_rgb(features):
@@ -157,7 +156,9 @@ def index():
 		curr_track = track(sp.current_user_playing_track())
 		# check whether they're actually playing something on spotify
 		if (curr_track.track_obj == None):
-			return "You are not playing any music on Spotify"
+			# turn off the led's
+			driver.set_rgb_power(0,0,0)
+			return "<head><meta http-equiv="refresh" content=120><title>Spotled</title></head> <body>You are not playing any music on Spotify</body>"
 		else:
 			check = check_in_db(db, curr_track)
 			user = {'username': username}
