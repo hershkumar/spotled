@@ -6,7 +6,7 @@ from flask_session import Session
 from colour import Color
 import sqlite3
 import datetime
-
+import colorsys
 
 try:
 	import RPi.GPIO
@@ -101,9 +101,9 @@ def get_color(features):
 	valence = features.get('valence')
 	# do some math here to get a single int between 0 and 100
 	final = round((energy * 100 + (1 - valence) * 50)/2)
-	final = round(energy * 100)
+	final = round(energy * 12)
 	# make a color gradient
-	colors = list(Color("blue").range_to(Color("red"), 101))
+	[(255,0,128),(255,0,255),(128,0,255),(0,0,255),(0,128,255),(0,255,255),(0,255,128),(0,255,0),(128,255,0),(255,255,0),(255,128,0),(255,0,0)]
 	return colors[final]
 
 def get_color_rgb(features):
