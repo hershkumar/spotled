@@ -82,9 +82,9 @@ class LedDriver(Thread):
         self.B_PWM.start(0)
     
     def set_rgb_power(self, rgb_vals):
-        self.R_PWM.ChangeDutyCycle(rgb_vals[0]/255.)
-        self.G_PWM.ChangeDutyCycle(rgb_vals[1]/255.)
-        self.B_PWM.ChangeDutyCycle(rgb_vals[2]/255.) 
+        self.R_PWM.ChangeDutyCycle(rgb_vals[0]/255. * 100)
+        self.G_PWM.ChangeDutyCycle(rgb_vals[1]/255. * 100)
+        self.B_PWM.ChangeDutyCycle(rgb_vals[2]/255. * 100) 
 
     def change_mode(self, new_mode):
         self.current_mode = new_mode
