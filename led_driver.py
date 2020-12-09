@@ -96,5 +96,10 @@ class LedDriver(Thread):
                     #todo: something eventually
     #     RPi.GPIO.cleanup()
 
-driver = LedDriver(17, 22, 24)
+# Set GPIO pin constants for my setup
+R_PIN = 17
+G_PIN = 22
+B_PIN = 24
+
+driver = LedDriver(R_PIN, G_PIN, B_PIN)
 LedDriver.set_rgb_power((255,255,0))
