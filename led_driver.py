@@ -68,7 +68,7 @@ class LedDriver(Thread):
     def __init__(self, R_CHANNEL, G_CHANNEL, B_CHANNEL):
         self.current_mode = LedMode.STATIC
 
-        RPi.GPIO.setmode(RPi.GPIO.BOARD)
+        RPi.GPIO.setmode(RPi.GPIO.BCM)
         RPi.GPIO.setup(R_CHANNEL, RPi.GPIO.OUT)
         RPi.GPIO.setup(G_CHANNEL, RPi.GPIO.OUT)
         RPi.GPIO.setup(B_CHANNEL, RPi.GPIO.OUT)
