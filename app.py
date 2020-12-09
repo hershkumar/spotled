@@ -52,30 +52,30 @@ class track:
 	def get_track_id(self):
 		return self.track_obj.get('item').get('id')
 
-	def get_color(features):
-		energy = features.get('energy')
-		valence = features.get('valence')
-		# do some math here to get a single int between 0 and 100
-		final = round((energy * 100 + (1 - valence) * 50)/2)
-		final = round(energy * 100)
-		# make a color gradient
-		colors = list(Color("blue").range_to(Color("red"), 101))
-		return colors[final]
+def get_color(features):
+	energy = features.get('energy')
+	valence = features.get('valence')
+	# do some math here to get a single int between 0 and 100
+	final = round((energy * 100 + (1 - valence) * 50)/2)
+	final = round(energy * 100)
+	# make a color gradient
+	colors = list(Color("blue").range_to(Color("red"), 101))
+	return colors[final]
 
-	def insert_track_into_db(db, curr_track, features):
-		db.execute("INSERT INTO TRACKS (ID, NAME, ARTIST, ALBUM, ENERGY, VALENCE, LOUDNESS, TEMPO)\
-			VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (curr_track.get_track_id(), curr_track.get_track_name(), curr_track.get_track_artist(), curr_track.get_track_album_name(), float(features.get('energy')), float(features.get('valence')), float(features.get('loudness')), float(features.get('tempo'))))
-		print("added song to db")
+def insert_track_into_db(db, curr_track, features):
+	db.execute("INSERT INTO TRACKS (ID, NAME, ARTIST, ALBUM, ENERGY, VALENCE, LOUDNESS, TEMPO)\
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (curr_track.get_track_id(), curr_track.get_track_name(), curr_track.get_track_artist(), curr_track.get_track_album_name(), float(features.get('energy')), float(features.get('valence')), float(features.get('loudness')), float(features.get('tempo'))))
+	print("added song to db")
 
-	def check_in_db(db, curr_track):
-		# make a cursor for the db
-		curs = db.cursor()
-		curs.execute("SELECT * FROM TRACKS WHERE ID=?", (curr_track.get_track_id(),))
-		ret = curs.fetchall()
-		return ret
+def check_in_db(db, curr_track):
+	# make a cursor for the db
+	curs = db.cursor()
+	curs.execute("SELECT * FROM TRACKS WHERE ID=?", (curr_track.get_track_id(),))
+	ret = curs.fetchall()
+	return ret
 
-	def clear_db(db):
-		db.execute("DELETE FROM TRACKS")
+def clear_db(db):
+	db.execute("DELETE FROM TRACKS")
 
 #create the flask object
 app = Flask(__name__)
