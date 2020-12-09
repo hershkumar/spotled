@@ -104,9 +104,9 @@ B_PIN = 24
 
 def main():
     driver = LedDriver(R_PIN, G_PIN, B_PIN)
-    for r in range(255):
-        for g in range(255):
-            for b in range(255):
+    for r in xrange(0,255,5):
+        for g in xrange(0,255,5):
+            for b in xrange(0,255,5):
                 print(r,g,b)
                 driver.set_rgb_power((r,g,b))
 
