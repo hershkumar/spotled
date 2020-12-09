@@ -108,7 +108,7 @@ def get_color(features):
 
 def get_color_rgb(features):
 	col = get_color(features)
-	return (col.red * 255, col.blue * 255, col.green * 255)
+	return (col[0] * 255, col[1] * 255, col[2] * 255)
 	
 
 def insert_track_into_db(db, curr_track, features):
