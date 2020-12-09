@@ -179,7 +179,7 @@ def index():
 				timestamp = datetime.datetime.now()
 				# set the color of the leds
 				col = get_color_rgb(features)
-				driver.set_rgb_power(col[0],col[1],col[2])
+				driver.set_rgb_power(col)
 				return render_template('index.html', user=user, song=song, time=timestamp, refresh=ref_rate)
 	else:
 		return "The system is currently off."
