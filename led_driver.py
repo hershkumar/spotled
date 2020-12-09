@@ -4,6 +4,7 @@ except (RuntimeError, ModuleNotFoundError):
     import fake_rpigpio.utils
     fake_rpigpio.utils.install()
 import enum
+import math
 from threading import Thread
 from time import sleep
 
@@ -34,6 +35,27 @@ class LedColor():
 
         return (round(h_val), round(s_val), round(v_val))
 
+    #this is broken dont use it yet
+    def hsv_to_rgb(self):
+        h_val, s_val, v_val = self.h_val, self.s_val/100., self.v_val/100.
+        i = math.floor((h_val) * 6)
+        f = h_val * 6 - i
+        p = v_val * (1 - s_val)
+        q = v_val * (1 - f * s_val)
+        t = v_val * (1 - (1 - f) * s_val)
+
+        rgb_combos = [(v_val, t, p), 
+                        (q, v_val, p), 
+                        (p, v_val, t), 
+                        (p, q, v_val), 
+                        (t, p, v_val), 
+                        (v_val, p, q)]
+
+        rgb_val = rgb_combos[i % 6]
+        return (round(rgb_val[0] * 255), 
+                round(rgb_val[1] * 255), 
+                round(rgb_val[2] * 255))
+
 class LedMode(enum.Enum):
     #function of brightness over time as a lambda
     STATIC = lambda brightness: brightness,
@@ -52,28 +74,24 @@ class LedDriver(Thread):
         RPi.GPIO.setup(B_CHANNEL, RPi.GPIO.OUT)
 
         self.R_PWM = RPi.GPIO.PWM(R_CHANNEL, 100)
-        self.G_PWM = RPi.GPIO.PWM(R_CHANNEL, 100)
-        self.B_PWM = RPi.GPIO.PWM(R_CHANNEL, 100)
+        self.G_PWM = RPi.GPIO.PWM(G_CHANNEL, 100)
+        self.B_PWM = RPi.GPIO.PWM(B_CHANNEL, 100)
 
-    def set_led_brightness(self, pwm_object, val):
-        if val < 0:
-            val = 0
-        if val > 100:
-            val = 100
-        pwm_object.ChangeDutyCycle(val)       
+        self.R_PWM.start(0)
+        self.G_PWM.start(0)
+        self.B_PWM.start(0)
+    
+    def set_rgb_power(self, rgb_vals):
+        self.R_PWM.ChangeDutyCycle(rgb_vals[0]/255.)
+        self.G_PWM.ChangeDutyCycle(rgb_vals[1]/255.)
+        self.B_PWM.ChangeDutyCycle(rgb_vals[2]/255.) 
 
     def change_mode(self, new_mode):
         self.current_mode = new_mode
 
-    def __run__(self):
-        while True:
-            if self.current_mode is not LedMode.STATIC:            
-                for brightness in range(0, 101):
-                    self.set_led_brightness(self.R_PWM, self.current_mode(brightness))
-                    self.set_led_brightness(self.G_PWM, self.current_mode(brightness))
-                    self.set_led_brightness(self.B_PWM, self.current_mode(brightness))
-                    sleep(self.UPDATE_RATE)
-        self.set_led_brightness(self.R_PWM, 0)
-        self.set_led_brightness(self.G_PWM, 0)
-        self.set_led_brightness(self.B_PWM, 0)
-        RPi.GPIO.cleanup()
+    # def __run__(self):
+    #     while True:
+    #         if self.current_mode is not LedMode.STATIC:            
+    #             for brightness in range(0, 101):
+                    #todo: something eventually
+    #     RPi.GPIO.cleanup()
