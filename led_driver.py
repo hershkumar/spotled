@@ -95,3 +95,6 @@ class LedDriver(Thread):
     #             for brightness in range(0, 101):
                     #todo: something eventually
     #     RPi.GPIO.cleanup()
+
+driver = LedDriver(17, 22, 24)
+LedDriver.set_rgb_power((255,255,0))
