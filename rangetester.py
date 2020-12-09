@@ -109,6 +109,7 @@ def main():
             for b in xrange(0,255,5):
                 print(r,g,b)
                 driver.set_rgb_power((r,g,b))
+                sleep(.5)
 
 if __name__ == '__main__':
     main()
