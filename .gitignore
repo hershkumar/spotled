@@ -1,3 +1,4 @@
 keys.txt
 __pycache__/
 .cache
+tracks.db

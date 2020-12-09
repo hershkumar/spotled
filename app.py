@@ -1,6 +1,7 @@
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
-from flask import Flask, render_template, request
+import spotipy.util as util
+from spotipy.oauth2 import SpotifyOAuth,SpotifyClientCredentials
+from flask import Flask, render_template, request, redirect
 from flask_session import Session
 from colour import Color
 import sqlite3
@@ -16,16 +17,12 @@ REDIRECT_URI = secrets.readline().strip()
 # What we want to access
 scope = "user-read-currently-playing"
 
-# do the authentication voodoo
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URI, scope=scope))
-# get the username
-username = sp.me().get('display_name')
+
 
 ON = True
 # how often the webpage should refresh itself, polling rate
 global ref_rate
 ref_rate = 30
-
 
 class track:
 	def __init__(self, track_obj):
@@ -82,10 +79,18 @@ app = Flask(__name__)
 
 # default routing
 @app.route('/')
-@app.route('/index')
 def index():
 	# if the system is on
 	if (ON):
+		# do the authentication voodoo
+		auth_manager = spotipy.oauth2.SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URI, scope=scope)
+		sp = spotipy.Spotify(auth_manager=auth_manager)
+
+		# get the username
+		username = sp.me().get('display_name')
+
+
+
 		# connect to the sqlite3 database
 		db = sqlite3.connect('tracks.db', isolation_level=None)
 		print("connected to the database")
