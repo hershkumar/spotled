@@ -6,7 +6,7 @@ from flask_session import Session
 from colour import Color
 import sqlite3
 import datetime
-
+import json
 
 # load the client keys from a file
 secrets = open("keys.txt", "r")
@@ -83,7 +83,7 @@ def index():
 	# if the system is on
 	if (ON):
 		# do the authentication voodoo
-		auth_manager = spotipy.oauth2.SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URI, scope=scope)
+		auth_manager = spotipy.oauth2.SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URI, scope=scope,open_browser=False)
 		sp = spotipy.Spotify(auth_manager=auth_manager)
 
 		# get the username
