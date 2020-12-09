@@ -7,6 +7,7 @@ from colour import Color
 import sqlite3
 import datetime
 import colorsys
+import math
 
 try:
 	import RPi.GPIO
@@ -98,12 +99,12 @@ class track:
 
 def get_color(features):
 	energy = features.get('energy')
-	valence = features.get('valence')
-	# do some math here to get a single int between 0 and 100
-	final = round((energy * 100 + (1 - valence) * 50)/2)
-	final = round(energy * 11)
 	# make a color gradient
 	colors = [(255,0,128),(255,0,255),(128,0,255),(0,0,255),(0,128,255),(0,255,255),(0,255,128),(0,255,0),(128,255,0),(255,255,0),(255,0,0),(255,0,0)]
+	n = len(colors)
+	final = math.tan(1.4 * energy)/math.tan(1.4)
+	final = round(final)
+	
 	return colors[final]
 
 def get_color_rgb(features):
