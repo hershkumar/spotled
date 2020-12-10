@@ -158,7 +158,7 @@ def index():
 		if (curr_track.track_obj == None):
 			# turn off the led's
 			driver.set_rgb_power(0,0,0)
-			return "<head><meta http-equiv="refresh" content=120><title>Spotled</title></head> <body>You are not playing any music on Spotify</body>"
+			return "<head><meta http-equiv=\"refresh\" content=120><title>Spotled</title></head> <body>You are not playing any music on Spotify</body>"
 		else:
 			check = check_in_db(db, curr_track)
 			user = {'username': username}
